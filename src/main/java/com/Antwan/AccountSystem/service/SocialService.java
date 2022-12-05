@@ -25,9 +25,10 @@ public class SocialService {
         this.googleConnectionFactory = new GoogleConnectionFactory(this.environment.getProperty("spring.social.google.appId"), this.environment.getProperty("spring.social.google.appSecret"));
     }
     public String googleAuthUrl(NativeWebRequest request) {
-        connectSupport.setCallbackUrl("http://localhost:8081/auth/google/info");
+        connectSupport.setCallbackUrl("http://localhost:8081/auth/google/code");
         MultiValueMap<String, String> additionalParameters = new LinkedMultiValueMap<>();
         additionalParameters.add("scope", "https://www.googleapis.com/auth/cloud-platform.read-only");
+        additionalParameters.add("access_type", "offline");
         return connectSupport.buildOAuthUrl(googleConnectionFactory, request, additionalParameters);
 
     }
@@ -44,4 +45,10 @@ public class SocialService {
     public void facebookGetInfo(NativeWebRequest request){
         connectSupport.completeConnection(facebookConnectionFactory, request);
     }
+
+    public void googleAccessTokenRequest(){
+
+    }
 }
+
+

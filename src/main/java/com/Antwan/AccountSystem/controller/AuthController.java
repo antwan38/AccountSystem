@@ -3,6 +3,10 @@ package com.Antwan.AccountSystem.controller;
 import com.Antwan.AccountSystem.service.SocialService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.yaml.snakeyaml.util.UriEncoder;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 
 @RestController
@@ -27,9 +31,17 @@ public class AuthController {
         return socialService.facebookAuthUrl(request);
     }
 
-    @GetMapping("/google/info")
-    public void googleGetInfo(NativeWebRequest request){
-        socialService.googleGetInfo(request);
+    @GetMapping("/google/code")
+    public String googleGetInfo(NativeWebRequest request, @RequestParam("code") String code){
+        try {
+            String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
+            return result;
+
+        } catch (UnsupportedEncodingException e) {
+            // not going to happen - value came from JDK's own StandardCharsets
+            return "error";
+        }
+        //socialService.googleGetInfo(request);
     }
 
     @GetMapping("/facebook/info")
