@@ -1,6 +1,8 @@
 package com.Antwan.AccountSystem.service;
 
+import com.Antwan.AccountSystem.model.Facebook;
 import com.Antwan.AccountSystem.model.Google;
+import com.Antwan.AccountSystem.repository.FacebookDal;
 import com.Antwan.AccountSystem.repository.GoogleDal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -19,10 +21,12 @@ public class SocialService {
     private GoogleConnectionFactory googleConnectionFactory;
     private FacebookConnectionFactory facebookConnectionFactory;
     private final GoogleDal googleDal;
+    private final FacebookDal facebookDal;
 
     private final ConnectSupport connectSupport = new ConnectSupport();
 
-    public SocialService(Environment environment, GoogleDal googleDal){
+    public SocialService(Environment environment, GoogleDal googleDal, FacebookDal facebookDal){
+        this.facebookDal = facebookDal;
         this.googleDal = googleDal;
         this.environment = environment;
         this.facebookConnectionFactory = new FacebookConnectionFactory(this.environment.getProperty("spring.social.facebook.appId"), this.environment.getProperty("spring.social.facebook.appSecret"));
@@ -38,7 +42,7 @@ public class SocialService {
     }
 
     public String facebookAuthUrl(NativeWebRequest request) {
-        connectSupport.setCallbackUrl("http://localhost:8081/auth/facebook/info");
+        connectSupport.setCallbackUrl("http://localhost:8081/auth/facebook/code");
         return connectSupport.buildOAuthUrl(facebookConnectionFactory, request);
     }
 
@@ -53,6 +57,11 @@ public class SocialService {
     public void googleAccessTokenRequest(String code){
         Google google = new Google(this.environment.getProperty("spring.social.google.appId"), this.environment.getProperty("spring.social.google.appSecret"), code);
         googleDal.getAccessToken(google);
+    }
+
+    public void facebookAccessTokenRequest(String code){
+        Facebook facebook = new Facebook(this.environment.getProperty("spring.social.facebook.appId"), this.environment.getProperty("spring.social.facebook.appSecret"), code);
+        facebookDal.getAccessToken(facebook);
     }
 }
 

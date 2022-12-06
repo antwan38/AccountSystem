@@ -1,5 +1,6 @@
 package com.Antwan.AccountSystem.repository;
 
+import com.Antwan.AccountSystem.model.Facebook;
 import com.Antwan.AccountSystem.model.Google;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -8,23 +9,21 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
 
 @Repository
-public class GoogleDal {
-
-    public void getAccessToken(Google google) {
+public class FacebookDal {
+    public void getAccessToken(Facebook facebook) {
         try {
             String result = "";
-            HttpPost post = new HttpPost("https://oauth2.googleapis.com/token");
+            HttpPost post = new HttpPost("https://graph.facebook.com/v8.0/oauth/access_token");
 
             StringBuilder json = new StringBuilder();
             json.append("{");
-            json.append("\"client_id\" : " + "\"" +google.getClient_id()+"\",");
-            json.append("\"code\" : " + "\"" +google.getCode()+"\",");
-            json.append("\"client_secret\" : " + "\"" +google.getClient_secret()+"\",");
-            json.append("\"grant_type\" : " + "\"" +google.getGrant_type()+"\",");
-            json.append("\"redirect_uri\" : " + "\"" +google.getRedirect_uri()+"\"");
+            json.append("\"client_id\" : " + "\"" +facebook.getClient_id()+"\",");
+            json.append("\"code\" : " + "\"" +facebook.getCode()+"\",");
+            json.append("\"client_secret\" : " + "\"" +facebook.getClient_secret()+"\",");
+            json.append("\"grant_type\" : " + "\"" +facebook.getGrant_type()+"\",");
+            json.append("\"redirect_uri\" : " + "\"" +facebook.getRedirect_uri()+"\"");
             json.append("}");
 
             // send a JSON data

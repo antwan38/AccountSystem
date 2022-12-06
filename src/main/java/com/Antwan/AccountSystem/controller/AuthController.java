@@ -3,10 +3,10 @@ package com.Antwan.AccountSystem.controller;
 import com.Antwan.AccountSystem.service.SocialService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.yaml.snakeyaml.util.UriEncoder;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 
 @RestController
@@ -32,21 +32,39 @@ public class AuthController {
     }
 
     @GetMapping("/google/code")
-    public String googleGetInfo(NativeWebRequest request, @RequestParam("code") String code){
+    public String googleGetToken(NativeWebRequest request, @RequestParam("code") String code){
         try {
             String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
-            socialService.googleAccessTokenRequest(result);
-            return "ok";
+            //socialService.googleAccessTokenRequest(result);
+            return result;
 
         } catch (UnsupportedEncodingException e) {
             // not going to happen - value came from JDK's own StandardCharsets
             return "error";
         }
-        //socialService.googleGetInfo(request);
+
+    }
+    @GetMapping("/facebook/code")
+    public String facebookGetToken(NativeWebRequest request, @RequestParam("code") String code){
+        try {
+            String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
+            socialService.facebookAccessTokenRequest(result);
+            return result;
+
+        } catch (UnsupportedEncodingException e) {
+            // not going to happen - value came from JDK's own StandardCharsets
+            return "error";
+        }
+
     }
 
     @GetMapping("/facebook/info")
-    public void facebookGetInfo(NativeWebRequest request){
-        socialService.facebookGetInfo(request);
+    public void facebookGetInfo(@RequestBody Map<String, String> data){
+        System.out.println(data.get("access_token"));
+    }
+
+    @GetMapping("/google/info")
+    public void googleGetUserInfo(@RequestBody Map<String, String> data){
+        System.out.println(data.get("access_token"));
     }
 }
