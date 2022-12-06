@@ -1,6 +1,6 @@
 package com.Antwan.AccountSystem.model;
 
-public class google {
+public class Google {
 
     private String client_id;
     private String client_secret;
@@ -8,7 +8,7 @@ public class google {
     private String code;
     private String redirect_uri;
 
-    public google(String client_id, String client_secret, String code) {
+    public Google(String client_id, String client_secret, String code) {
         this.client_id = client_id;
         this.client_secret = client_secret;
         this.code = code;

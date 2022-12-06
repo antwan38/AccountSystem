@@ -35,7 +35,8 @@ public class AuthController {
     public String googleGetInfo(NativeWebRequest request, @RequestParam("code") String code){
         try {
             String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
-            return result;
+            socialService.googleAccessTokenRequest(result);
+            return "ok";
 
         } catch (UnsupportedEncodingException e) {
             // not going to happen - value came from JDK's own StandardCharsets

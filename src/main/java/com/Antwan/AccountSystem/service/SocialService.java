@@ -1,5 +1,7 @@
 package com.Antwan.AccountSystem.service;
 
+import com.Antwan.AccountSystem.model.Google;
+import com.Antwan.AccountSystem.repository.GoogleDal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.social.connect.web.ConnectSupport;
@@ -16,10 +18,12 @@ public class SocialService {
     private Environment environment;
     private GoogleConnectionFactory googleConnectionFactory;
     private FacebookConnectionFactory facebookConnectionFactory;
+    private final GoogleDal googleDal;
 
     private final ConnectSupport connectSupport = new ConnectSupport();
 
-    public SocialService(Environment environment){
+    public SocialService(Environment environment, GoogleDal googleDal){
+        this.googleDal = googleDal;
         this.environment = environment;
         this.facebookConnectionFactory = new FacebookConnectionFactory(this.environment.getProperty("spring.social.facebook.appId"), this.environment.getProperty("spring.social.facebook.appSecret"));
         this.googleConnectionFactory = new GoogleConnectionFactory(this.environment.getProperty("spring.social.google.appId"), this.environment.getProperty("spring.social.google.appSecret"));
@@ -46,8 +50,9 @@ public class SocialService {
         connectSupport.completeConnection(facebookConnectionFactory, request);
     }
 
-    public void googleAccessTokenRequest(){
-
+    public void googleAccessTokenRequest(String code){
+        Google google = new Google(this.environment.getProperty("spring.social.google.appId"), this.environment.getProperty("spring.social.google.appSecret"), code);
+        googleDal.getAccessToken(google);
     }
 }
 
