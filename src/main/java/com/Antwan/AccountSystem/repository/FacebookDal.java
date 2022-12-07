@@ -2,43 +2,36 @@ package com.Antwan.AccountSystem.repository;
 
 import com.Antwan.AccountSystem.model.Facebook;
 import com.Antwan.AccountSystem.model.Google;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Repository
 public class FacebookDal {
     public void getAccessToken(Facebook facebook) {
         try {
-            String result = "";
-            HttpPost post = new HttpPost("https://graph.facebook.com/v8.0/oauth/access_token");
 
-            StringBuilder json = new StringBuilder();
-            json.append("{");
-            json.append("\"client_id\" : " + "\"" +facebook.getClient_id()+"\",");
-            json.append("\"code\" : " + "\"" +facebook.getCode()+"\",");
-            json.append("\"client_secret\" : " + "\"" +facebook.getClient_secret()+"\",");
-            json.append("\"grant_type\" : " + "\"" +facebook.getGrant_type()+"\",");
-            json.append("\"redirect_uri\" : " + "\"" +facebook.getRedirect_uri()+"\"");
-            json.append("}");
+            ObjectMapper mapper = new ObjectMapper();
+            System.out.println(mapper.writeValueAsString(facebook));
 
             // send a JSON data
-            post.setEntity(new StringEntity(json.toString()));
+            String res = WebClient.builder()
+                    .baseUrl("https://graph.facebook.com/v8.0/oauth/access_token")
+                    .build()
+                    .post()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromValue(mapper.writeValueAsString(facebook)))
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
 
-            try (CloseableHttpClient httpClient = HttpClients.createDefault();
-                 CloseableHttpResponse response = httpClient.execute(post)) {
-
-                result = EntityUtils.toString(response.getEntity());
-            }
-
-            System.out.println(result);
+            System.out.println("Response: " + res);
 
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
         }
 
     }
