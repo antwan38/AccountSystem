@@ -4,6 +4,7 @@ import com.Antwan.AccountSystem.model.Facebook;
 import com.Antwan.AccountSystem.model.Google;
 import com.Antwan.AccountSystem.repository.FacebookDal;
 import com.Antwan.AccountSystem.repository.GoogleDal;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.social.connect.web.ConnectSupport;
@@ -46,22 +47,23 @@ public class SocialService {
         return connectSupport.buildOAuthUrl(facebookConnectionFactory, request);
     }
 
-    public void googleGetInfo(NativeWebRequest request){
-        connectSupport.completeConnection(googleConnectionFactory, request);
-    }
-
-    public void facebookGetInfo(NativeWebRequest request){
-        connectSupport.completeConnection(facebookConnectionFactory, request);
-    }
 
     public void googleAccessTokenRequest(String code){
         Google google = new Google(this.environment.getProperty("spring.social.google.appId"), this.environment.getProperty("spring.social.google.appSecret"), code);
         googleDal.getAccessToken(google);
     }
 
-    public void facebookAccessTokenRequest(String code){
+    public JsonNode facebookAccessTokenRequest(String code){
         Facebook facebook = new Facebook(this.environment.getProperty("spring.social.facebook.appId"), this.environment.getProperty("spring.social.facebook.appSecret"), code);
-        facebookDal.getAccessToken(facebook);
+        return getFacebookUserInfo(facebookDal.getAccessToken(facebook));
+    }
+
+//    public JsonNode getGoogleUserInfo(String accessToken){
+//        return googleDal.getUserInfo(accessToken);
+//    }
+
+    public JsonNode getFacebookUserInfo(String accessToken){
+        return facebookDal.getUserInfo(accessToken);
     }
 }
 

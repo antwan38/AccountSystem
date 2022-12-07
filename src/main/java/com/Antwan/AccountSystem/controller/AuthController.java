@@ -1,6 +1,7 @@
 package com.Antwan.AccountSystem.controller;
 
 import com.Antwan.AccountSystem.service.SocialService;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
@@ -48,8 +49,8 @@ public class AuthController {
     public String facebookGetToken(NativeWebRequest request, @RequestParam("code") String code){
         try {
             String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
-            socialService.facebookAccessTokenRequest(result);
-            return result;
+            JsonNode userInfo = socialService.facebookAccessTokenRequest(result);
+            return userInfo.get("name").asText();
 
         } catch (UnsupportedEncodingException e) {
             // not going to happen - value came from JDK's own StandardCharsets
