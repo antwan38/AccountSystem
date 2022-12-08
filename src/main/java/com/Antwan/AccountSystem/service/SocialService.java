@@ -48,9 +48,9 @@ public class SocialService {
     }
 
 
-    public void googleAccessTokenRequest(String code){
+    public JsonNode googleAccessTokenRequest(String code){
         Google google = new Google(this.environment.getProperty("spring.social.google.appId"), this.environment.getProperty("spring.social.google.appSecret"), code);
-        googleDal.getAccessToken(google);
+        return getGoogleUserInfo(googleDal.getAccessToken(google));
     }
 
     public JsonNode facebookAccessTokenRequest(String code){
@@ -58,9 +58,9 @@ public class SocialService {
         return getFacebookUserInfo(facebookDal.getAccessToken(facebook));
     }
 
-//    public JsonNode getGoogleUserInfo(String accessToken){
-//        return googleDal.getUserInfo(accessToken);
-//    }
+    public JsonNode getGoogleUserInfo(String accessToken){
+        return googleDal.getUserInfo(accessToken);
+    }
 
     public JsonNode getFacebookUserInfo(String accessToken){
         return facebookDal.getUserInfo(accessToken);

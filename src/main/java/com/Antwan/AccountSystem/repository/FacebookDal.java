@@ -30,7 +30,6 @@ public class FacebookDal {
                     .bodyToMono(JsonNode.class)
                     .block();
 
-            System.out.println("Response: " + res.get("access_token").asText());
             return res.get("access_token").asText();
 
         } catch (Exception e) {

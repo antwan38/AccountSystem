@@ -33,11 +33,11 @@ public class AuthController {
     }
 
     @GetMapping("/google/code")
-    public String googleGetToken(NativeWebRequest request, @RequestParam("code") String code){
+    public String googleGetToken(@RequestParam("code") String code){
         try {
             String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
-            socialService.googleAccessTokenRequest(result);
-            return result;
+            JsonNode userInfo = socialService.googleAccessTokenRequest(result);
+            return result; //userInfo.get("name").asText() + userInfo.get("email").asText();
 
         } catch (UnsupportedEncodingException e) {
             // not going to happen - value came from JDK's own StandardCharsets
@@ -46,11 +46,11 @@ public class AuthController {
 
     }
     @GetMapping("/facebook/code")
-    public String facebookGetToken(NativeWebRequest request, @RequestParam("code") String code){
+    public String facebookGetToken(@RequestParam("code") String code){
         try {
             String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
             JsonNode userInfo = socialService.facebookAccessTokenRequest(result);
-            return userInfo.get("name").asText();
+            return userInfo.get("name").asText() + userInfo.get("email").asText();
 
         } catch (UnsupportedEncodingException e) {
             // not going to happen - value came from JDK's own StandardCharsets
@@ -59,13 +59,4 @@ public class AuthController {
 
     }
 
-    @GetMapping("/facebook/info")
-    public void facebookGetInfo(@RequestBody Map<String, String> data){
-        System.out.println(data.get("access_token"));
-    }
-
-    @GetMapping("/google/info")
-    public void googleGetUserInfo(@RequestBody Map<String, String> data){
-        System.out.println(data.get("access_token"));
-    }
 }
