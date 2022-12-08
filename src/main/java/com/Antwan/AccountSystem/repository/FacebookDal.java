@@ -1,7 +1,9 @@
 package com.Antwan.AccountSystem.repository;
 
+import com.Antwan.AccountSystem.model.AccessToken;
 import com.Antwan.AccountSystem.model.Facebook;
 import com.Antwan.AccountSystem.model.Google;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
@@ -42,7 +44,8 @@ public class FacebookDal {
         try {
 
             ObjectMapper mapper = new ObjectMapper();
-            System.out.println(mapper.writeValueAsString(access_token));
+            AccessToken accessToken = new AccessToken(access_token);
+            System.out.println(mapper.writeValueAsString(accessToken));
 
             // send a JSON data
             JsonNode res = WebClient.builder()
@@ -50,7 +53,7 @@ public class FacebookDal {
                     .build()
                     .post()
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(BodyInserters.fromValue(mapper.writeValueAsString(access_token)))
+                    .body(BodyInserters.fromValue(mapper.writeValueAsString(accessToken)))
                     .retrieve()
                     .bodyToMono(JsonNode.class)
                     .block();
