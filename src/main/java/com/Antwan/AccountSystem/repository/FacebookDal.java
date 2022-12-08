@@ -59,11 +59,13 @@ public class FacebookDal {
 
             return res;
 
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
 
     }
+
 
 }

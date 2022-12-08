@@ -46,15 +46,15 @@ public class AuthController {
 
     }
     @GetMapping("/facebook/code")
-    public String facebookGetToken(@RequestParam("code") String code){
+    public JsonNode facebookGetToken(@RequestParam("code") String code){
         try {
             String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
             JsonNode userInfo = socialService.facebookAccessTokenRequest(result);
-            return userInfo.get("name").asText() + userInfo.get("email").asText();
+            return userInfo;
 
         } catch (UnsupportedEncodingException e) {
             // not going to happen - value came from JDK's own StandardCharsets
-            return "error";
+            return null;
         }
 
     }
