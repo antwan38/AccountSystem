@@ -23,17 +23,17 @@ public class AuthController {
         this.socialService = socialService;
     }
 
-    @GetMapping("/google")
+    @GetMapping("/google/")
     public String googleAuthUrl(NativeWebRequest request) {
        return socialService.googleAuthUrl(request);
     }
 
-    @GetMapping("/facebook")
-    public JsonNode facebookAuthUrl(NativeWebRequest request,@RequestParam("uri") String uri) throws IOException {
+    @GetMapping("/facebook/")
+    public JsonNode facebookAuthUrl(NativeWebRequest request,@RequestParam("redirect_uri") String uri) throws IOException {
         return socialService.facebookAuthUrl(request, uri);
     }
 
-    @GetMapping("/google/code")
+    @GetMapping("/google/code/")
     public String googleGetToken(@RequestParam("code") String code){
         try {
             String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
@@ -46,8 +46,8 @@ public class AuthController {
         }
 
     }
-    @GetMapping("/facebook/code")
-    public JsonNode facebookGetToken(@RequestParam("code") String code, @RequestParam("uri") String uri){
+    @GetMapping("/facebook/code/")
+    public JsonNode facebookGetToken(@RequestParam("code") String code, @RequestParam("redirect_uri") String uri){
         try {
             String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
             JsonNode userInfo = socialService.facebookAccessTokenRequest(result, uri);
