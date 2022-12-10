@@ -4,7 +4,11 @@ import com.Antwan.AccountSystem.model.Facebook;
 import com.Antwan.AccountSystem.model.Google;
 import com.Antwan.AccountSystem.repository.FacebookDal;
 import com.Antwan.AccountSystem.repository.GoogleDal;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.social.connect.web.ConnectSupport;
@@ -15,6 +19,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.context.request.NativeWebRequest;
+
+import java.io.IOException;
 
 @Service
 public class SocialService {
@@ -42,9 +48,12 @@ public class SocialService {
 
     }
 
-    public String facebookAuthUrl(NativeWebRequest request) {
-        connectSupport.setCallbackUrl("http://localhost:8081/auth/facebook/code");
-        return connectSupport.buildOAuthUrl(facebookConnectionFactory, request);
+    public JsonNode facebookAuthUrl(NativeWebRequest request, String uri) throws IOException {
+        connectSupport.setCallbackUrl(uri);
+        String url = connectSupport.buildOAuthUrl(facebookConnectionFactory, request);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj = mapper.readTree("{\"url\": \"" + url + "\"}");
+        return actualObj;
     }
 
 
@@ -53,8 +62,8 @@ public class SocialService {
         return getGoogleUserInfo(googleDal.getAccessToken(google));
     }
 
-    public JsonNode facebookAccessTokenRequest(String code){
-        Facebook facebook = new Facebook(this.environment.getProperty("spring.social.facebook.appId"), this.environment.getProperty("spring.social.facebook.appSecret"), code);
+    public JsonNode facebookAccessTokenRequest(String code, String uriRedirect){
+        Facebook facebook = new Facebook(this.environment.getProperty("spring.social.facebook.appId"), this.environment.getProperty("spring.social.facebook.appSecret"), code, uriRedirect);
         return getFacebookUserInfo(facebookDal.getAccessToken(facebook));
     }
 
