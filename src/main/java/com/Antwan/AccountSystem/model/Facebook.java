@@ -7,11 +7,11 @@ public class Facebook {
     private String redirect_uri;
     private String grant_type;
 
-    public Facebook(String client_id, String client_secret, String code) {
+    public Facebook(String client_id, String client_secret, String code, String redirect_uri) {
         this.client_id = client_id;
         this.client_secret = client_secret;
         this.code = code;
-        this.redirect_uri = "http://localhost:8081/auth/facebook/code";
+        this.redirect_uri = redirect_uri;
         this.grant_type = "authorization_code";
     }
 

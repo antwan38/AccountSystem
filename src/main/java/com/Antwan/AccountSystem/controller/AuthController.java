@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -28,8 +29,8 @@ public class AuthController {
     }
 
     @GetMapping("/facebook")
-    public String facebookAuthUrl(NativeWebRequest request) {
-        return socialService.facebookAuthUrl(request);
+    public JsonNode facebookAuthUrl(NativeWebRequest request,@RequestParam("uri") String uri) throws IOException {
+        return socialService.facebookAuthUrl(request, uri);
     }
 
     @GetMapping("/google/code")
@@ -46,10 +47,10 @@ public class AuthController {
 
     }
     @GetMapping("/facebook/code")
-    public JsonNode facebookGetToken(@RequestParam("code") String code){
+    public JsonNode facebookGetToken(@RequestParam("code") String code, @RequestParam("uri") String uri){
         try {
             String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
-            JsonNode userInfo = socialService.facebookAccessTokenRequest(result);
+            JsonNode userInfo = socialService.facebookAccessTokenRequest(result, uri);
             return userInfo;
 
         } catch (UnsupportedEncodingException e) {
