@@ -64,7 +64,7 @@ public class SocialService {
 
     public JsonNode facebookAccessTokenRequest(String code, String uriRedirect){
         Facebook facebook = new Facebook(this.environment.getProperty("spring.social.facebook.appId"), this.environment.getProperty("spring.social.facebook.appSecret"), code, uriRedirect);
-        return getFacebookUserInfo(facebookDal.getAccessToken(facebook));
+        return facebookDal.getAccessToken(facebook);
     }
 
     public JsonNode getGoogleUserInfo(String accessToken){
