@@ -1,0 +1,23 @@
+{
+  "name": "accountsystem",
+  "version": "1.0.0",
+  "description": "social login",
+  "main": "index.js",
+  "scripts": {
+    "test": "mvn spring-boot:run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antwan38/AccountSystem.git"
+  },
+  "keywords": [
+    "facebook",
+    "social"
+  ],
+  "author": "antwan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/antwan38/AccountSystem/issues"
+  },
+  "homepage": "https://github.com/antwan38/AccountSystem#readme"
+}
