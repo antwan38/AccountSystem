@@ -4,12 +4,8 @@ import com.Antwan.AccountSystem.model.Facebook;
 import com.Antwan.AccountSystem.model.Google;
 import com.Antwan.AccountSystem.repository.FacebookDal;
 import com.Antwan.AccountSystem.repository.GoogleDal;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.social.connect.web.ConnectSupport;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
@@ -17,7 +13,6 @@ import org.springframework.social.google.connect.GoogleConnectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import java.io.IOException;
@@ -32,7 +27,7 @@ public class SocialService {
 
     private final ConnectSupport connectSupport = new ConnectSupport();
 
-    public SocialService(Environment environment, GoogleDal googleDal, FacebookDal facebookDal){
+    public SocialService(Environment environment, GoogleDal googleDal, FacebookDal facebookDal) {
         this.facebookDal = facebookDal;
         this.googleDal = googleDal;
         this.environment = environment;
@@ -57,21 +52,21 @@ public class SocialService {
     }
 
 
-    public JsonNode googleAccessTokenRequest(String code){
+    public JsonNode googleAccessTokenRequest(String code) {
         Google google = new Google(this.environment.getProperty("spring.social.google.appId"), this.environment.getProperty("spring.social.google.appSecret"), code);
         return getGoogleUserInfo(googleDal.getAccessToken(google));
     }
 
-    public JsonNode facebookAccessTokenRequest(String code, String uriRedirect){
+    public JsonNode facebookAccessTokenRequest(String code, String uriRedirect) {
         Facebook facebook = new Facebook(this.environment.getProperty("spring.social.facebook.appId"), this.environment.getProperty("spring.social.facebook.appSecret"), code, uriRedirect);
         return facebookDal.getAccessToken(facebook);
     }
 
-    public JsonNode getGoogleUserInfo(String accessToken){
+    public JsonNode getGoogleUserInfo(String accessToken) {
         return googleDal.getUserInfo(accessToken);
     }
 
-    public JsonNode getFacebookUserInfo(String accessToken){
+    public JsonNode getFacebookUserInfo(String accessToken) {
         return facebookDal.getUserInfo(accessToken);
     }
 }

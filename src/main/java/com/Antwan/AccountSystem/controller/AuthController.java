@@ -4,11 +4,9 @@ import com.Antwan.AccountSystem.service.SocialService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 
 @RestController
@@ -19,7 +17,7 @@ public class AuthController {
 
 
     private final SocialService socialService;
-    public AuthController(SocialService socialService){
+    public AuthController(SocialService socialService) {
         this.socialService = socialService;
     }
 
@@ -29,12 +27,12 @@ public class AuthController {
     }
 
     @GetMapping("/facebook/")
-    public JsonNode facebookAuthUrl(NativeWebRequest request,@RequestParam("redirect_uri") String uri) throws IOException {
+    public JsonNode facebookAuthUrl(NativeWebRequest request, @RequestParam("redirect_uri") String uri) throws IOException {
         return socialService.facebookAuthUrl(request, uri);
     }
 
     @GetMapping("/google/code/")
-    public String googleGetToken(@RequestParam("code") String code){
+    public String googleGetToken(@RequestParam("code") String code) {
         try {
             String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
             JsonNode userInfo = socialService.googleAccessTokenRequest(result);
@@ -47,7 +45,7 @@ public class AuthController {
 
     }
     @GetMapping("/facebook/code/")
-    public JsonNode facebookGetToken(@RequestParam("code") String code, @RequestParam("redirect_uri") String uri){
+    public JsonNode facebookGetToken(@RequestParam("code") String code, @RequestParam("redirect_uri") String uri) {
         try {
             String result = java.net.URLDecoder.decode(code, StandardCharsets.UTF_8.name());
             JsonNode userInfo = socialService.facebookAccessTokenRequest(result, uri);
