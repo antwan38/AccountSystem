@@ -15,7 +15,6 @@ public class FacebookDal {
         try {
 
             ObjectMapper mapper = new ObjectMapper();
-            System.out.println(mapper.writeValueAsString(facebook));
 
             // send a JSON data
              JsonNode res = WebClient.builder()
